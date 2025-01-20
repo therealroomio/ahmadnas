@@ -107,8 +107,28 @@ export default function AutoInsuranceForm({ onSubmit: onFormSubmit }: AutoInsura
     initialData: INITIAL_FORM_DATA,
     steps: STEPS,
     onSubmit: async (data) => {
-      console.log("Form submitted:", data)
-      onFormSubmit?.()
+      try {
+        const response = await fetch("/api/submit-form", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            formType: "auto",
+            data,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error("Failed to submit form")
+        }
+
+        console.log("Form submitted successfully")
+        onFormSubmit?.()
+      } catch (error) {
+        console.error("Error submitting form:", error)
+        throw error // This will be caught by the useMultiStepForm hook
+      }
     },
   })
 
