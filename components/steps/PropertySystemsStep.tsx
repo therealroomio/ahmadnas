@@ -6,199 +6,142 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import type { PropertySystems } from "@/types/property-form"
+import { FormField } from "@/components/shared/form-components"
 
 interface PropertySystemsStepProps {
   data: PropertySystems
   onChange: (data: PropertySystems) => void
+  errors: Record<string, string>
 }
 
-export function PropertySystemsStep({ data, onChange }: PropertySystemsStepProps) {
+export function PropertySystemsStep({ data, onChange, errors }: PropertySystemsStepProps) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="roofing">Roofing Type</Label>
-          <Select
-            value={data.roofing}
-            onValueChange={(value) => onChange({ ...data, roofing: value })}
-          >
-            <SelectTrigger id="roofing">
+        <FormField label="Roofing" error={errors.roofing} required>
+          <Select value={data.roofing} onValueChange={(value) => onChange({ ...data, roofing: value })}>
+            <SelectTrigger>
               <SelectValue placeholder="Select roofing type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="asphalt">Asphalt Shingles</SelectItem>
               <SelectItem value="metal">Metal</SelectItem>
-              <SelectItem value="tile">Tile</SelectItem>
               <SelectItem value="slate">Slate</SelectItem>
+              <SelectItem value="tile">Tile</SelectItem>
+              <SelectItem value="wood">Wood Shakes</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="principalHeating">Principal Heating</Label>
-          <Select
-            value={data.principalHeating}
-            onValueChange={(value) => onChange({ ...data, principalHeating: value })}
-          >
-            <SelectTrigger id="principalHeating">
+        </FormField>
+        <FormField label="Principal Heating" error={errors.principalHeating} required>
+          <Select value={data.principalHeating} onValueChange={(value) => onChange({ ...data, principalHeating: value })}>
+            <SelectTrigger>
               <SelectValue placeholder="Select heating type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="forced-air-gas">Forced Air - Gas</SelectItem>
-              <SelectItem value="forced-air-electric">Forced Air - Electric</SelectItem>
-              <SelectItem value="hot-water">Hot Water</SelectItem>
+              <SelectItem value="forced-air">Forced Air Gas</SelectItem>
+              <SelectItem value="electric">Electric</SelectItem>
               <SelectItem value="heat-pump">Heat Pump</SelectItem>
+              <SelectItem value="hot-water">Hot Water</SelectItem>
+              <SelectItem value="oil">Oil</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="plumbing">Plumbing Type</Label>
-          <Select
-            value={data.plumbing}
-            onValueChange={(value) => onChange({ ...data, plumbing: value })}
-          >
-            <SelectTrigger id="plumbing">
+        <FormField label="Plumbing" error={errors.plumbing} required>
+          <Select value={data.plumbing} onValueChange={(value) => onChange({ ...data, plumbing: value })}>
+            <SelectTrigger>
               <SelectValue placeholder="Select plumbing type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="copper">Copper</SelectItem>
               <SelectItem value="pex">PEX</SelectItem>
               <SelectItem value="plastic">Plastic</SelectItem>
-              <SelectItem value="mixed">Mixed</SelectItem>
+              <SelectItem value="galvanized">Galvanized</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="waterHeater">Water Heater Type</Label>
-          <Select
-            value={data.waterHeater}
-            onValueChange={(value) => onChange({ ...data, waterHeater: value })}
-          >
-            <SelectTrigger id="waterHeater">
+        </FormField>
+        <FormField label="Water Heater" error={errors.waterHeater} required>
+          <Select value={data.waterHeater} onValueChange={(value) => onChange({ ...data, waterHeater: value })}>
+            <SelectTrigger>
               <SelectValue placeholder="Select water heater type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="tank-gas">Tank - Gas</SelectItem>
-              <SelectItem value="tank-electric">Tank - Electric</SelectItem>
-              <SelectItem value="tankless-gas">Tankless - Gas</SelectItem>
-              <SelectItem value="tankless-electric">Tankless - Electric</SelectItem>
+              <SelectItem value="gas">Gas</SelectItem>
+              <SelectItem value="electric">Electric</SelectItem>
+              <SelectItem value="tankless">Tankless</SelectItem>
+              <SelectItem value="solar">Solar</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </FormField>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="space-y-2">
-          <Label htmlFor="wiring">Wiring Type</Label>
-          <Select
-            value={data.wiring}
-            onValueChange={(value) => onChange({ ...data, wiring: value })}
-          >
-            <SelectTrigger id="wiring">
+      <div className="grid gap-4 md:grid-cols-2">
+        <FormField label="Wiring" error={errors.wiring} required>
+          <Select value={data.wiring} onValueChange={(value) => onChange({ ...data, wiring: value })}>
+            <SelectTrigger>
               <SelectValue placeholder="Select wiring type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="copper">Copper</SelectItem>
               <SelectItem value="aluminum">Aluminum</SelectItem>
-              <SelectItem value="mixed">Mixed</SelectItem>
+              <SelectItem value="knob-tube">Knob and Tube</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="electricalPanel">Electrical Panel</Label>
-          <Input
-            id="electricalPanel"
-            value={data.electricalPanel}
-            onChange={(e) => onChange({ ...data, electricalPanel: e.target.value })}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="electricalAmps">Electrical Amps</Label>
-          <Input
-            id="electricalAmps"
-            type="number"
-            value={data.electricalAmps}
-            onChange={(e) => onChange({ ...data, electricalAmps: e.target.value })}
-            required
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="garageType">Garage Type</Label>
+        </FormField>
+        <FormField label="Electrical Panel" error={errors.electricalPanel} required>
           <Select
-            value={data.garageType || ''}
-            onValueChange={(value) => onChange({ ...data, garageType: value })}
+            value={data.electricalPanel}
+            onValueChange={(value) => onChange({ ...data, electricalPanel: value })}
           >
-            <SelectTrigger id="garageType">
-              <SelectValue placeholder="Select garage type" />
+            <SelectTrigger>
+              <SelectValue placeholder="Select panel type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="attached">Attached</SelectItem>
-              <SelectItem value="detached">Detached</SelectItem>
-              <SelectItem value="built-in">Built-in</SelectItem>
-              <SelectItem value="none">None</SelectItem>
+              <SelectItem value="breaker">Circuit Breaker</SelectItem>
+              <SelectItem value="fuse">Fuse Box</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="numberOfCars">Number of Cars</Label>
-          <Input
-            id="numberOfCars"
-            type="number"
-            min="0"
-            value={data.numberOfCars || ''}
-            onChange={(e) => onChange({ ...data, numberOfCars: Number(e.target.value) })}
-          />
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="pool"
-            checked={data.pool || false}
-            onCheckedChange={(checked) => onChange({ ...data, pool: checked })}
-          />
-          <Label htmlFor="pool">Pool</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="hotTub"
-            checked={data.hotTub || false}
-            onCheckedChange={(checked) => onChange({ ...data, hotTub: checked })}
-          />
-          <Label htmlFor="hotTub">Hot Tub</Label>
-        </div>
+        <FormField label="Electrical Amps" error={errors.electricalAmps} required>
+          <Select
+            value={data.electricalAmps}
+            onValueChange={(value) => onChange({ ...data, electricalAmps: value })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select amperage" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="60">60 Amps</SelectItem>
+              <SelectItem value="100">100 Amps</SelectItem>
+              <SelectItem value="200">200 Amps</SelectItem>
+              <SelectItem value="400">400 Amps</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="fullBathrooms">Full Bathrooms</Label>
+        <FormField label="Full Bathrooms" error={errors.fullBathrooms}>
           <Input
-            id="fullBathrooms"
             type="number"
             min="0"
             value={data.fullBathrooms}
-            onChange={(e) => onChange({ ...data, fullBathrooms: Number(e.target.value) })}
-            required
+            onChange={(e) => onChange({ ...data, fullBathrooms: parseInt(e.target.value) || 0 })}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="halfBathrooms">Half Bathrooms</Label>
+        </FormField>
+        <FormField label="Half Bathrooms" error={errors.halfBathrooms}>
           <Input
-            id="halfBathrooms"
             type="number"
             min="0"
             value={data.halfBathrooms}
-            onChange={(e) => onChange({ ...data, halfBathrooms: Number(e.target.value) })}
-            required
+            onChange={(e) => onChange({ ...data, halfBathrooms: parseInt(e.target.value) || 0 })}
           />
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

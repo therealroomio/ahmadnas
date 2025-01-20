@@ -10,10 +10,12 @@ import { Button } from "@/components/ui/button"
 import { CalendarIcon } from 'lucide-react'
 import { format } from "date-fns"
 import type { InsuranceHistory } from "@/types/property-form"
+import { FormField } from "@/components/shared/form-components"
 
 interface InsuranceHistoryStepProps {
   data: InsuranceHistory
   onChange: (data: InsuranceHistory) => void
+  errors: Record<string, string>
 }
 
 const SwitchField = ({ label, id, checked, onCheckedChange }: { label: string; id: string; checked: boolean; onCheckedChange: (checked: boolean) => void }) => (
@@ -28,33 +30,28 @@ const SwitchField = ({ label, id, checked, onCheckedChange }: { label: string; i
 );
 
 
-export function InsuranceHistoryStep({ data, onChange }: InsuranceHistoryStepProps) {
+export function InsuranceHistoryStep({ data, onChange, errors }: InsuranceHistoryStepProps) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="presentInsurer">Present Insurer</Label>
+        <FormField label="Present Insurer" error={errors.presentInsurer} required>
           <Input
             id="presentInsurer"
             value={data.presentInsurer}
             onChange={(e) => onChange({ ...data, presentInsurer: e.target.value })}
-            required
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="policyNumber">Policy Number</Label>
+        </FormField>
+        <FormField label="Policy Number" error={errors.policyNumber} required>
           <Input
             id="policyNumber"
             value={data.policyNumber}
             onChange={(e) => onChange({ ...data, policyNumber: e.target.value })}
-            required
           />
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="expiryDate">Expiry Date</Label>
+        <FormField label="Expiry Date" error={errors.expiryDate} required>
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -64,11 +61,7 @@ export function InsuranceHistoryStep({ data, onChange }: InsuranceHistoryStepPro
                 }`}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {data.expiryDate ? (
-                  format(new Date(data.expiryDate), "PPP")
-                ) : (
-                  <span>Pick a date</span>
-                )}
+                {data.expiryDate ? format(new Date(data.expiryDate), "PPP") : <span>Pick a date</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
@@ -85,53 +78,61 @@ export function InsuranceHistoryStep({ data, onChange }: InsuranceHistoryStepPro
               />
             </PopoverContent>
           </Popover>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="yearsOfContinuousCoverage">Years of Continuous Coverage</Label>
+        </FormField>
+        <FormField label="Years of Continuous Coverage" error={errors.yearsOfContinuousCoverage} required>
           <Input
             id="yearsOfContinuousCoverage"
             type="number"
             min="0"
             value={data.yearsOfContinuousCoverage}
             onChange={(e) => onChange({ ...data, yearsOfContinuousCoverage: e.target.value })}
-            required
           />
-        </div>
+        </FormField>
       </div>
 
       <div className="space-y-4">
-        <SwitchField
-          label="Has your Property Insurance been cancelled or refused in the past 3 years?"
-          id="previousCancellation"
-          checked={data.previousCancellation}
-          onCheckedChange={(checked) => onChange({ ...data, previousCancellation: checked })}
-        />
+        <FormField label="Previous Cancellation" error={errors.previousCancellation}>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="previousCancellation"
+              checked={data.previousCancellation}
+              onCheckedChange={(checked) => onChange({ ...data, previousCancellation: checked })}
+            />
+            <span className="text-sm text-muted-foreground">Has your insurance ever been cancelled?</span>
+          </div>
+        </FormField>
         {data.previousCancellation && (
-          <Textarea
-            id="cancellationDetails"
-            value={data.cancellationDetails || ''}
-            onChange={(e) => onChange({ ...data, cancellationDetails: e.target.value })}
-            placeholder="Please indicate when and why"
-            required
-          />
+          <FormField label="Cancellation Details" error={errors.cancellationDetails}>
+            <Textarea
+              id="cancellationDetails"
+              value={data.cancellationDetails || ''}
+              onChange={(e) => onChange({ ...data, cancellationDetails: e.target.value })}
+              placeholder="Please indicate when and why"
+            />
+          </FormField>
         )}
       </div>
 
       <div className="space-y-4">
-        <SwitchField
-          label="Have you had any claims including water damage in the last 5 years?"
-          id="waterDamageClaims"
-          checked={data.waterDamageClaims}
-          onCheckedChange={(checked) => onChange({ ...data, waterDamageClaims: checked })}
-        />
+        <FormField label="Water Damage Claims" error={errors.waterDamageClaims}>
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="waterDamageClaims"
+              checked={data.waterDamageClaims}
+              onCheckedChange={(checked) => onChange({ ...data, waterDamageClaims: checked })}
+            />
+            <span className="text-sm text-muted-foreground">Any water damage claims in the past 5 years?</span>
+          </div>
+        </FormField>
         {data.waterDamageClaims && (
-          <Textarea
-            id="waterDamageDetails"
-            value={data.waterDamageDetails || ''}
-            onChange={(e) => onChange({ ...data, waterDamageDetails: e.target.value })}
-            placeholder="Please indicate when and describe"
-            required
-          />
+          <FormField label="Water Damage Details" error={errors.waterDamageDetails}>
+            <Textarea
+              id="waterDamageDetails"
+              value={data.waterDamageDetails || ''}
+              onChange={(e) => onChange({ ...data, waterDamageDetails: e.target.value })}
+              placeholder="Please indicate when and describe"
+            />
+          </FormField>
         )}
       </div>
 
@@ -145,12 +146,16 @@ export function InsuranceHistoryStep({ data, onChange }: InsuranceHistoryStepPro
         />
       </div>
 
-      <SwitchField
-        label="Are all Occupants Non-Smokers?"
-        id="nonSmokers"
-        checked={data.nonSmokers}
-        onCheckedChange={(checked) => onChange({ ...data, nonSmokers: checked })}
-      />
+      <FormField label="Non-Smokers" error={errors.nonSmokers}>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="nonSmokers"
+            checked={data.nonSmokers}
+            onCheckedChange={(checked) => onChange({ ...data, nonSmokers: checked })}
+          />
+          <span className="text-sm text-muted-foreground">Are all residents non-smokers?</span>
+        </div>
+      </FormField>
 
       <div className="space-y-2">
         <Label htmlFor="autoInsurance">Auto Insurance Information</Label>
@@ -172,12 +177,16 @@ export function InsuranceHistoryStep({ data, onChange }: InsuranceHistoryStepPro
         />
       </div>
 
-      <SwitchField
-        label="Do you give consent for collection & use of a Credit Score?"
-        id="creditScoreConsent"
-        checked={data.creditScoreConsent}
-        onCheckedChange={(checked) => onChange({ ...data, creditScoreConsent: checked })}
-      />
+      <FormField label="Credit Score Consent" error={errors.creditScoreConsent}>
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="creditScoreConsent"
+            checked={data.creditScoreConsent}
+            onCheckedChange={(checked) => onChange({ ...data, creditScoreConsent: checked })}
+          />
+          <span className="text-sm text-muted-foreground">Consent to credit score check?</span>
+        </div>
+      </FormField>
 
       <div className="space-y-2">
         <Label htmlFor="notes">Additional Notes</Label>

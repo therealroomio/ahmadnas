@@ -9,41 +9,38 @@ import { Button } from "@/components/ui/button"
 import { CalendarIcon } from 'lucide-react'
 import { format } from "date-fns"
 import type { PropertyOverview } from "@/types/property-form"
+import { FormField } from "@/components/shared/form-components"
 
 interface PropertyOverviewStepProps {
   data: PropertyOverview
   onChange: (data: PropertyOverview) => void
+  errors: Record<string, string>
 }
 
-export function PropertyOverviewStep({ data, onChange }: PropertyOverviewStepProps) {
+export function PropertyOverviewStep({ data, onChange, errors }: PropertyOverviewStepProps) {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="yearBuilt">Year Built</Label>
+        <FormField label="Year Built" error={errors.yearBuilt} required>
           <Input
             id="yearBuilt"
             type="number"
             value={data.yearBuilt}
             onChange={(e) => onChange({ ...data, yearBuilt: e.target.value })}
-            required
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="squareFootageAboveGround">Square Footage (Above Ground)</Label>
+        </FormField>
+        <FormField label="Square Footage (Above Ground)" error={errors.squareFootageAboveGround} required>
           <Input
             id="squareFootageAboveGround"
             type="number"
             value={data.squareFootageAboveGround}
             onChange={(e) => onChange({ ...data, squareFootageAboveGround: e.target.value })}
-            required
           />
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="structureType">Structure Type</Label>
+        <FormField label="Structure Type" error={errors.structureType} required>
           <Select
             value={data.structureType}
             onValueChange={(value) => onChange({ ...data, structureType: value })}
@@ -58,21 +55,18 @@ export function PropertyOverviewStep({ data, onChange }: PropertyOverviewStepPro
               <SelectItem value="condo">Condominium</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="storeys">Number of Storeys</Label>
+        </FormField>
+        <FormField label="Number of Storeys" error={errors.storeys} required>
           <Input
             id="storeys"
             value={data.storeys}
             onChange={(e) => onChange({ ...data, storeys: e.target.value })}
-            required
           />
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="space-y-2">
-          <Label htmlFor="basementType">Basement Type</Label>
+        <FormField label="Basement Type" error={errors.basementType} required>
           <Select
             value={data.basementType}
             onValueChange={(value) => onChange({ ...data, basementType: value })}
@@ -87,18 +81,16 @@ export function PropertyOverviewStep({ data, onChange }: PropertyOverviewStepPro
               <SelectItem value="slab">Slab</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="basementSquareFootage">Basement Square Footage</Label>
+        </FormField>
+        <FormField label="Basement Square Footage" error={errors.basementSquareFootage}>
           <Input
             id="basementSquareFootage"
             type="number"
             value={data.basementSquareFootage || ''}
             onChange={(e) => onChange({ ...data, basementSquareFootage: e.target.value })}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="basementFinishedArea">Finished Area (%)</Label>
+        </FormField>
+        <FormField label="Finished Area (%)" error={errors.basementFinishedArea}>
           <Input
             id="basementFinishedArea"
             type="number"
@@ -107,12 +99,11 @@ export function PropertyOverviewStep({ data, onChange }: PropertyOverviewStepPro
             value={data.basementFinishedArea || ''}
             onChange={(e) => onChange({ ...data, basementFinishedArea: e.target.value })}
           />
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="exteriorWalls">Exterior Walls</Label>
+        <FormField label="Exterior Walls" error={errors.exteriorWalls} required>
           <Select
             value={data.exteriorWalls}
             onValueChange={(value) => onChange({ ...data, exteriorWalls: value })}
@@ -128,9 +119,8 @@ export function PropertyOverviewStep({ data, onChange }: PropertyOverviewStepPro
               <SelectItem value="stone">Stone</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="basicShape">Basic Shape of House</Label>
+        </FormField>
+        <FormField label="Basic Shape of House" error={errors.basicShape}>
           <Select
             value={data.basicShape}
             onValueChange={(value) => onChange({ ...data, basicShape: value })}
@@ -145,32 +135,29 @@ export function PropertyOverviewStep({ data, onChange }: PropertyOverviewStepPro
               <SelectItem value="square">Square</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </FormField>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="distanceToHydrant">Distance to Hydrant (meters)</Label>
+        <FormField label="Distance to Hydrant (meters)" error={errors.distanceToHydrant}>
           <Input
             id="distanceToHydrant"
             type="number"
             value={data.distanceToHydrant || ''}
             onChange={(e) => onChange({ ...data, distanceToHydrant: e.target.value })}
           />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="distanceToFireHall">Distance to Fire Hall (km)</Label>
+        </FormField>
+        <FormField label="Distance to Fire Hall (km)" error={errors.distanceToFireHall}>
           <Input
             id="distanceToFireHall"
             type="number"
             value={data.distanceToFireHall || ''}
             onChange={(e) => onChange({ ...data, distanceToFireHall: e.target.value })}
           />
-        </div>
+        </FormField>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="occupancyDate">Occupancy Date</Label>
+      <FormField label="Occupancy Date" error={errors.occupancyDate} required>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -201,7 +188,7 @@ export function PropertyOverviewStep({ data, onChange }: PropertyOverviewStepPro
             />
           </PopoverContent>
         </Popover>
-      </div>
+      </FormField>
     </div>
   )
 }
